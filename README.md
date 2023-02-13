@@ -40,7 +40,7 @@ Your number was 66!
 
 * Look back at the programs you've already written. Can you use any functions or logic you've already written?
 
-* Think of the guesses not just as *confirming* a possibility, but as *eliminating* a range of possiblities.
+* Think of the guesses not just as *confirming* a possibility, but as *eliminating* a range of possibilities.
 
 * We've called the currently-being-asked-about number a "guess", but a better name might be "pivot" or "fulcrum" since it's essentially dividing the set of solutions into two parts. (See the Khan Academy link below for a visualization of this effect.)
 
