@@ -55,14 +55,14 @@ https://notes.burke.libbey.me/ansi-escape-codes/ // More Escape Codes
   // n=1 clears from cursor to start of line
   // n=2 clears entire line
 
-  // Not sure what it does but I used it a lot...
-  // 
-
+// Guess Array
+let numbersPlayed = [];
 console.log(backgroundBlack); // added for powershell and other default background colors
 // console.clear();
+function game() {
 start();
 async function start() {
-let guessWord = [
+let guessWord = [reset,
 `${red}                                                                                   GGGGGGGGGGGGG`,
 `                                                                                 GGG::::::::::::G`,
 `                                                                                 GG:::::::::::::::G`,
@@ -111,7 +111,7 @@ let guessWord = [
 `                                                                    N::::::N      N::::::::Nu:::::::::::::::uum::::m   m::::m   m::::m b:::::bbbbbb::::::be::::::::e           r:::::r`,
 `                                                                    N::::::N       N:::::::N u:::::::::::::::um::::m   m::::m   m::::m b::::::::::::::::b  e::::::::eeeeeeee   r:::::r`,
 `                                                                    N::::::N        N::::::N  uu::::::::uu:::um::::m   m::::m   m::::m b:::::::::::::::b    ee:::::::::::::e   r:::::r`,
-`                                                                    NNNNNNNN         NNNNNNN    uuuuuuuu  uuuummmmmm   mmmmmm   mmmmmm bbbbbbbbbbbbbbbb       eeeeeeeeeeeeee   rrrrrrr \n\n\n\n\n                                                                                                                                                           ${brightWhite}${bold}Dan Henry 2023 Upright Education Coding Lab \u001b[0\n\n\n\n\n\x1b[1m`]
+`                                                                    NNNNNNNN         NNNNNNN    uuuuuuuu  uuuummmmmm   mmmmmm   mmmmmm bbbbbbbbbbbbbbbb       eeeeeeeeeeeeee   rrrrrrr \n\n\n\n\n                                                                                                                                                           ${brightWhite}Dan Henry 2023 Upright Education Coding Lab \n\n\n\n\n`]
 
 console.log(clearScreen); // Clears the Screen
 for (item in guessWord) {
@@ -119,28 +119,33 @@ console.log(guessWord[item]);}
 }
   let minNum = 1;
   let highNum;
-  // async function pickHighNum() {
-  // let awaitOrKeep = ask(`Would you like to (s)et the limit or (k)eep it at 100?`);
-  //   if (awaitOrKeep == "k" || awaitOrKeep == "keep") {
-  //     highNum = 100;
-  //     whichMode();
-  //   } else {
-  //   // secretNum
-  //   highNum = ask(`Please enter the number`)
-  // }
+
+  async function pickHighNum() {
+    // console.log("\u001b[5B", "\u001b[5A")
+  let awaitOrKeep = await ask(`                                                                                                          ${brightWhite}Would you like to ${brightYellow}(s)et ${brightWhite}the limit or ${brightYellow}(k)eep ${brightWhite}it at ${brightYellow}100${brightWhite}?                                                                                                                                                                                                                                                    ${brightYellow}`);
+    if (awaitOrKeep == "k" || awaitOrKeep == "keep") {
+      highNum = 100;
+      console.log(`\u001b[3A\u001b[2K`)
+      whichMode();
+    } else {
+    // secretNum
+    highNum = await ask(`                                                                                                                          Please enter the number \n                                                                                                                                     `)
+    whichMode();
+  }
+
   // pickHighNum();
     
-  // async function higherOrLower() {
-  //     secretNum = await ask()
+  async function higherOrLower() {
+      secretNum = await ask()
       
-  //     console.log()
-  //     gamePlay();
-  //   }
-  // }
-  // pickHighNum();
+      console.log()
+      gamePlay();
+    }
+  }
+  pickHighNum();
 
     async function whichMode() {
-      let gameMode = await ask(`                                                                                                                        ${cyan}Which mode would you like? \n\n                                                                                                                          ${white}The ${brightYellow}(C)omputer ${white}guesses?\n \n                                                                                                                    The ${brightYellow}(P)layer${white} would like to guess.\n                                                                                                                                    `)
+      let gameMode = await ask(`                                                                                                                        ${brightWhite}Which ${brightYellow}mode ${brightWhite}would you like? \n\n                                                                                                                          ${brightWhite}The ${brightYellow}(C)omputer ${brightWhite}guesses?\n \n                                                                                                                    The ${brightYellow}(P)layer${brightWhite} would like to guess.\n                                                                                                                                    `)
     if (gameMode == "c" || gameMode == "computer" ) {
       console.log(`\u001b[7A${brightWhite}\u001b[2K`)
       higherOrLower();
@@ -152,7 +157,7 @@ console.log(guessWord[item]);}
   whichMode()
 
     async function higherOrLower() {
-        let secretNum = await ask(`                                                                                                                   ${cyan}Pick a number between ${brightYellow}${minNum} ${cyan}and ${brightYellow}${highNum}...\n                                                                                                                                     `) // move cursor to the location, "\033[50D\033[30C"
+        let secretNum = await ask(`                                                                                                                   ${cyan}Pick a number between ${brightYellow}${minNum} ${cyan}and ${brightYellow}${highNum}...\n                                                                                                                                    `) // move cursor to the location, "\033[50D\033[30C"
         // console.log(typeof secretNum);
         // secretNum = parseInt(secretNum);
         if (isNaN(secretNum)) {
@@ -162,19 +167,20 @@ console.log(guessWord[item]);}
           console.log(`                                                                                                              \u001b[3A${brightWhite} Try to keep it between ${brightYellow}${minNum} ${brightWhite}and ${brightYellow}${highNum}, ${brightWhite}okay?${cyan}`)
           higherOrLower();
          }else {
-        console.log(`                                                                                                                             \u001b[3A${brightWhite}\u001b[2K You picked ${secretNum}                                                                                                                        \n\u001b[2K                                                                                                                        Let the games begin!!!`)
+        console.log(`                                                                                                                             \u001b[4A${brightWhite}\u001b[2K   You picked\n                                                                                                                                    ${brightYellow}${secretNum}                                                                                                                        \n\u001b[2K${brightWhite}                                                                                                                         Let the games begin!!!`)
         gamePlay();
       }
     }
   
-      higherOrLower();
-///
+  higherOrLower();
 
     async function gamePlay() {
   // Random Number Generator:
       let randNum = Math.floor((Math.random()*(highNum - minNum) + minNum)); // This is MOSTLY good. Sometimes it gets on a tangent. Love to see a better solution :)
+      numbersPlayed.push(randNum);
+      // console.log(`Numbers Played: `, numbersPlayed)
       
-      let answerHighOrLow = await ask(`\n${brightWhite}${bold}                                                                                                       Is your number ${brightYellow}(h)igher${brightWhite}, ${brightYellow}(l)ower${brightWhite}, or the ${brightYellow}(s)ame ${brightWhite}as ${brightYellow}${randNum}?                                                                                                                                                                                                                                                      `);
+      let answerHighOrLow = await ask(`\n${brightWhite}                                                                                                       Is your number ${brightYellow}(h)igher${brightWhite}, ${brightYellow}(l)ower${brightWhite}, or the ${brightYellow}(s)ame ${brightWhite}as ${brightYellow}${randNum}?                                                                                                                                                                                                                                                      `);
       if
       // If the answer is Lower
       (answerHighOrLow == "l" || answerHighOrLow == "lower") {
@@ -185,10 +191,10 @@ console.log(guessWord[item]);}
           highNum = randNum -1;
           gamePlay();
           if (highNum == minNum) {
-            console.log(`\n\n\u001b[5A\u001b[0J                                                                                                                          ${white}Your number is: ${brightYellow}${minNum}${white}!`) // Add styling
-            process.exit()
+            console.log(`\n\n\u001b[5A\u001b[0J                                                                                                                          ${brightWhite}Your number is: ${brightYellow}${minNum}${brightWhite}!`) // Add styling
+            playAgain()
           }
-        } else {console.log(`${brightWhite}${bold}                                                                                                                             ${brightWhite}Too ${brightWhite} ${brightYellow}low${brightWhite}, dude. \n[1m                                                                                                                  ${brightWhite}Did you ${brightWhite} ${brightYellow}forget ${brightWhite}your ${brightWhite} ${brightYellow}number???${brightWhite}\u001b[2K`); process.exit();} // Check the text codes after "number???"
+        } else {console.log(`${brightWhite}                                                                                                                             ${brightWhite}Too ${brightWhite} ${brightYellow}low${brightWhite}, dude. \n[1m                                                                                                                  ${brightWhite}Did you ${brightWhite} ${brightYellow}forget ${brightWhite}your ${brightWhite} ${brightYellow}number???${brightWhite}\u001b[2K`);playAgain();} // Check the text codes after "number???"
         // console.log(highNum, minNum)
         
 
@@ -199,7 +205,7 @@ console.log(guessWord[item]);}
         // If the minimum Number is the same as the highest number
         if (minNum == highNum) {
           console.log(`                                                                                                        Well, it's either ${highNum}, or you hit the wrong button!`);
-          process.exit();
+          playAgain();
 
       // add checks for whether randomNum is the same as highNum or minNum
         } else {
@@ -209,11 +215,25 @@ console.log(guessWord[item]);}
 
       // If the answer is Same
       } else if (answerHighOrLow == "s" || answerHighOrLow == "same") {
-        console.log(`\u001b[2A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}!!!`);
-        process.exit();
+        console.log(`\u001b[2A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}${brightWhite}!!!`);
+        playAgain();
 
       // If the answer doesn't fit any acceptable answers
       } else {console.log(`                                                                                                                       \u001b[4A\u001b[2K${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)} // move this up two rows and clear whole row
       gamePlay();
     }
-    gamePlay();
+  gamePlay();
+
+  async function playAgain() {
+    let playAgain = await ask (`\n                                                                                                                     Would you like to play again?                                                                                                                                                                                                                                                          ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}\n                                                                                                                                    `);
+    if (playAgain == "y"|| playAgain == "yes") {
+      console.log(reset)
+      game()
+    } else if 
+      (playAgain == "n"|| "no") {
+        process.exit()
+      } else {
+      console.log(`Is that yes, or no?\n                                                                                                                                    `)}
+  }
+}
+game();
