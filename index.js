@@ -1,3 +1,4 @@
+const { get } = require('http');
 const readline = require('readline');
 const rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -139,10 +140,17 @@ console.log(guessWord[item]);}
       secretNum = await ask()
       
       console.log()
-      gamePlay();
+      computerGuesses();
     }
   }
+  
   pickHighNum();
+
+  let getRandom = function () {  
+    let randNum = Math.floor((Math.random()*(highNum - minNum) + minNum));
+    numbersPlayed.push(randNum); // double check this later. probably need to move and improve
+    return randNum;
+  }
 
     async function whichMode() {
       let gameMode = await ask(`                                                                                                                        ${brightWhite}Which ${brightYellow}mode ${brightWhite}would you like? \n\n                                                                                                                          ${brightWhite}The ${brightYellow}(C)omputer ${brightWhite}guesses?\n \n                                                                                                                    The ${brightYellow}(P)layer${brightWhite} would like to guess.\n                                                                                                                                    `)
@@ -150,7 +158,7 @@ console.log(guessWord[item]);}
       console.log(`\u001b[7A${brightWhite}\u001b[2K`)
       higherOrLower();
     } else {
-      console.log("insert new game mode function call here")
+      playerGuesses();
     }
 
   }
@@ -168,16 +176,45 @@ console.log(guessWord[item]);}
           higherOrLower();
          }else {
         console.log(`                                                                                                                             \u001b[4A${brightWhite}\u001b[2K   You picked\n                                                                                                                                    ${brightYellow}${secretNum}                                                                                                                        \n\u001b[2K${brightWhite}                                                                                                                         Let the games begin!!!`)
-        gamePlay();
+        computerGuesses();
       }
     }
   
   higherOrLower();
-
-    async function gamePlay() {
+// let rand = getRandom();
+// console.log("paren: ",getRandom());
+// console.log("noparen: ",getRandom);
+async function playerGuesses() {
+  // let rand = 23;
+      let pickANumber = await ask(`\n${brightWhite}                                                                                                                    Pick a number between ${brightYellow}${minNum}${brightWhite} and ${brightYellow}${highNum}${brightWhite}.                                                                                                                                                                                                                                                               `);
+      console.log("Thank you for picking the number")
+        if (isNaN(pickANumber)) {
+          console.log("You've found the keyboard. Congratulations! Now, let's try again using a number...")
+          playerGuesses();
+        } else if (pickANumber > highNum) {
+        console.log(`Let's keep it under ${highNum}, okay?`)
+        playerGuesses();
+      } else if (pickANumber < minNum) {
+        console.log(`You've gone too low! You have to keep your guess above ${minNum}`)
+        playerGuesses();
+      } else if (pickANumber > getRandom) {
+        console.log(`\u001b[4A\u001b[2K${brightWhite}Too High! Try again.`)
+        playerGuesses();
+      } else if (pickANumber < getRandom) {
+        console.log(getRandom);
+        console.log(`\u001b[4A\u001b[2K${brightWhite}                                                                                                                              ${brightRed}Too Loooooow! \n\n                                                                                                                                ${brightWhite}Try again.`)
+        playerGuesses();
+      } else if (pickANumber == getRandom) {
+        console.log(`\n\n\u001b[5A\u001b[0J                                                                                                                    ${brightWhite}You guessed it! The number is: ${brightYellow}${pickANumber}${brightWhite}!`) // Add styling
+            playAgain()
+      } else {
+        console.log("You've made it to the end")
+      }
+      }
+    async function computerGuesses() {
   // Random Number Generator:
       let randNum = Math.floor((Math.random()*(highNum - minNum) + minNum)); // This is MOSTLY good. Sometimes it gets on a tangent. Love to see a better solution :)
-      numbersPlayed.push(randNum);
+      numbersPlayed.push(randNum); // double check this later. probably need to move and improve
       // console.log(`Numbers Played: `, numbersPlayed)
       
       let answerHighOrLow = await ask(`\n${brightWhite}                                                                                                       Is your number ${brightYellow}(h)igher${brightWhite}, ${brightYellow}(l)ower${brightWhite}, or the ${brightYellow}(s)ame ${brightWhite}as ${brightYellow}${randNum}?                                                                                                                                                                                                                                                      `);
@@ -189,7 +226,7 @@ console.log(guessWord[item]);}
       // If the highNum minus 1 is not greater than one, it's going too low 
         if (randNum -1 >= 1) {
           highNum = randNum -1;
-          gamePlay();
+          computerGuesses();
           if (highNum == minNum) {
             console.log(`\n\n\u001b[5A\u001b[0J                                                                                                                          ${brightWhite}Your number is: ${brightYellow}${minNum}${brightWhite}!`) // Add styling
             playAgain()
@@ -211,7 +248,7 @@ console.log(guessWord[item]);}
         } else {
         minNum = randNum +1;
         // console.log(highNum, minNum)
-        gamePlay();}
+        computerGuesses();}
 
       // If the answer is Same
       } else if (answerHighOrLow == "s" || answerHighOrLow == "same") {
@@ -220,9 +257,9 @@ console.log(guessWord[item]);}
 
       // If the answer doesn't fit any acceptable answers
       } else {console.log(`                                                                                                                       \u001b[4A\u001b[2K${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)} // move this up two rows and clear whole row
-      gamePlay();
+      computerGuesses();
     }
-  gamePlay();
+  computerGuesses();
 
   async function playAgain() {
     let playAgain = await ask (`\n                                                                                                                     Would you like to play again?                                                                                                                                                                                                                                                          ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}\n                                                                                                                                    `);
