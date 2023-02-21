@@ -221,10 +221,6 @@ console.log(guessWord[item]);}
         console.log("You've made it to the end")
       }
   }
-
-
-
-
   
   let randNum = Math.random()
 
@@ -239,7 +235,7 @@ console.log(guessWord[item]);}
         console.log(`\u001b[4A\u001b[2K${brightWhite}`)
       highNum = randNum -1;
 
-        if (highNum < secretNum) {
+        if (minNum > secretNum) {
           let youSure = await ask (`                                                                                                                         You sure about that?                                                                                                                                                                                                                                                              ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}?                                                                                                                                                                                                                                                                        `);
     
           if (youSure == "y" || youSure == "yes") {
@@ -274,7 +270,28 @@ console.log(guessWord[item]);}
         console.log("Hiiiiiiigh","randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
 
         console.log(`\u001b[4A\u001b[2K${brightWhite}`)
+        if (highNum < secretNum) {
+          let youSure = await ask (`                                                                                                                         You sure about that?                                                                                                                                                                                                                                                              ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}?                                                                                                                                                                                                                                                                        `);
+    
+          if (youSure == "y" || youSure == "yes") {
+          let reallySure = await ask(`                                                                                                                       Are you ${brightRed}SURE${brightWhite} you're ${brightYellow}sure${brightWhite}?                                                                                                                                                                                                                                                           ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}?                                                                                                                    `);
+          if (reallySure == "y" || reallySure == "yes") {
+          process.exit()
+          } else if (reallySure == "n" || reallySure == "no") {
+          computerGuesses()
+          } else {reallySure()}
+          } else if (youSure == "n" || youSure == "no") {
+          computerGuesses();
+        } else {
+        youSure();
+        
+        
+    // } else {
+    //   computerGuesses();
+      }
 
+      // console.log("randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
+    }
         // If the minimum Number is the same as the highest number
         if (minNum == highNum) {
           console.log(`                                                                                                        Well, it's either ${highNum}, or you hit the wrong button!`);
@@ -288,9 +305,12 @@ console.log(guessWord[item]);}
 
       // If the answer is Same
       } else if (answerHighOrLow == "s" || answerHighOrLow == "same") {
+        if (randNum == secretNum) {
         console.log(`\u001b[6A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}${brightWhite}!!!`);
         playAgain();
+      } else {console.log(`\u001b[6A\u001b[2K${brightWhite}                                                                                                                     Nobody Likes a ${brightRed}Cheater${brightWhite}!!!`);
 
+      }
       // If the answer doesn't fit any acceptable answers
       } else {console.log(`                                                                                                                       \u001b[4A\u001b[0J${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)}
       computerGuesses();
