@@ -309,7 +309,7 @@ console.log(guessWord[item]);}
         console.log(`\u001b[6A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}${brightWhite}!!!`);
         playAgain();
       } else {console.log(`\u001b[6A\u001b[2K${brightWhite}                                                                                                                     Nobody Likes a ${brightRed}Cheater${brightWhite}!!!`);
-
+      process.exit()
       }
       // If the answer doesn't fit any acceptable answers
       } else {console.log(`                                                                                                                       \u001b[4A\u001b[0J${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)}
