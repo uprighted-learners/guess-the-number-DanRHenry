@@ -267,7 +267,7 @@ console.log(guessWord[item]);}
         }
       // If the answer is Higher
       } else if (answerHighOrLow == "h" || answerHighOrLow == "higher") {
-        console.log("Hiiiiiiigh","randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
+        // console.log("Hiiiiiiigh","randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
 
         console.log(`\u001b[4A\u001b[2K${brightWhite}`)
         if (highNum < secretNum) {
@@ -301,6 +301,7 @@ console.log(guessWord[item]);}
         } else {
         minNum = randNum +1;
         // console.log(highNum, minNum)
+        console.log(`\u001b[1A\u001b[2K${brightWhite}`)
         computerGuesses();}
 
       // If the answer is Same
