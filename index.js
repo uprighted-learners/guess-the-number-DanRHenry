@@ -1,3 +1,4 @@
+const { clear } = require('console');
 const { get } = require('http');
 const readline = require('readline');
 const rl = readline.createInterface(process.stdin, process.stdout);
@@ -44,6 +45,8 @@ https://notes.burke.libbey.me/ansi-escape-codes/ // More Escape Codes
   let down = "\u001b[{n}B"
   let right = "\u001b[{n}C"
   let left = "\u001b[{n}D"
+// Backspace Code
+  let backspace = "\u001b[010"
 // Clear Screen Codes
   let clearScreen = "\u001b[2J"
   // "\u001b[{n}J"
@@ -58,12 +61,10 @@ https://notes.burke.libbey.me/ansi-escape-codes/ // More Escape Codes
 
 // Guess Array
 let numbersPlayed = [];
-
-console.log(backgroundBlack); // added for powershell and other default background colors
-function game() {
+function game() {console.log(backgroundBlack);
   start();
   async function start() {
-let guessWord = [reset,
+let guessWord = [reset+backgroundBlack,
 `${red}                                                                                   GGGGGGGGGGGGG`,
 `                                                                                 GGG::::::::::::G`,
 `                                                                                 GG:::::::::::::::G`,
@@ -112,7 +113,7 @@ let guessWord = [reset,
 `                                                                    N::::::N      N::::::::Nu:::::::::::::::uum::::m   m::::m   m::::m b:::::bbbbbb::::::be::::::::e           r:::::r`,
 `                                                                    N::::::N       N:::::::N u:::::::::::::::um::::m   m::::m   m::::m b::::::::::::::::b  e::::::::eeeeeeee   r:::::r`,
 `                                                                    N::::::N        N::::::N  uu::::::::uu:::um::::m   m::::m   m::::m b:::::::::::::::b    ee:::::::::::::e   r:::::r`,
-`                                                                    NNNNNNNN         NNNNNNN    uuuuuuuu  uuuummmmmm   mmmmmm   mmmmmm bbbbbbbbbbbbbbbb       eeeeeeeeeeeeee   rrrrrrr \n\n\n\n\n                                                                                                                                                           ${brightWhite}Dan Henry 2023 Upright Education Coding Lab \n\n\n\n\n`]
+`                                                                    NNNNNNNN         NNNNNNN    uuuuuuuu  uuuummmmmm   mmmmmm   mmmmmm bbbbbbbbbbbbbbbb       eeeeeeeeeeeeee   rrrrrrr \n\n\n\n\n                                                                                                                                                     ${brightWhite}Dan Henry 2023 Upright Education Coding Project \n\n\n\n\n`]
 
 console.log(clearScreen); // Clears the Screen
 for (item in guessWord) {
@@ -120,18 +121,31 @@ console.log(guessWord[item]);}
   }
   let minNum = 1;
   let highNum;
+  let secretNum;
 
   async function pickHighNum() {
     // console.log("\u001b[5B", "\u001b[5A")
-  let awaitOrKeep = await ask(`                                                                                                          ${brightWhite}Would you like to ${brightYellow}(s)et ${brightWhite}the limit or ${brightYellow}(k)eep ${brightWhite}it at ${brightYellow}100${brightWhite}?                                                                                                                                                                                                                                                    ${brightYellow}`);
+  let awaitOrKeep = await ask(`                                                                                                          ${brightWhite}Would you like to ${brightYellow}(s)et ${brightWhite}the limit or ${brightYellow}(k)eep ${brightWhite}it at ${brightYellow}100${brightWhite}?\n                                                                                                                                                                                                                                                                                                                                                                                                                   `);
+  // console.log("\n\n\n")
     if (awaitOrKeep == "k" || awaitOrKeep == "keep") {
       highNum = 100;
-      console.log()
+      // console.log()
       whichMode();
     } else if (awaitOrKeep == "s" || awaitOrKeep == "set") {
     // secretNum
-    highNum = await ask(`\u001b[2A\u001b[0J                                                                                                                          Please enter the number \n                                                                                                                                     `)
+    highNum = await ask(`\u001b[2A\u001b[0J                                                                                                                          Please enter the ${brightYellow}number${brightWhite} \n                                                                                                                                     `)
+    if (isNaN(highNum)) {
+      console.log("\u001b[3A\u001b[0J")
+      pickHighNum();
+    }
+    else if (highNum < 1) {
+      console.log("\u001b[3A\u001b[0J")
+      pickHighNum();
+    }
     whichMode();
+  } else {
+    console.log("\u001b[3A\u001b[0J")
+    pickHighNum();
   }
 
   // pickHighNum();
@@ -160,9 +174,8 @@ console.log(guessWord[item]);}
   whichMode()
 
   async function higherOrLower() {
-        let secretNum = await ask(`                                                                                                                    ${cyan}Pick a number between ${brightYellow}${minNum} ${cyan}and ${brightYellow}${highNum}...\n                                                                                                                                    `) // move cursor to the location, "\033[50D\033[30C"
-        // console.log(typeof secretNum);
-        // secretNum = parseInt(secretNum);
+        secretNum = await ask(`                                                                                                                    ${brightWhite}Pick a number between ${brightYellow}${minNum} ${brightWhite}and ${brightYellow}${highNum}...\n                                                                                                                                    `)
+        secretNum = parseInt(secretNum);
         if (isNaN(secretNum)) {
           console.log(`\u001b[3A\u001b[2K${brightWhite}                                                                                                                    Try again, and enter a \u001b[35;1mnumber.${cyan}`) 
           higherOrLower();
@@ -176,8 +189,6 @@ console.log(guessWord[item]);}
   }
   higherOrLower();
 
-  let randNum = Math.random()
-
   async function playerGuesses() {
   rand = Math.floor(randNum*(highNum - minNum)) + minNum
   
@@ -188,9 +199,9 @@ console.log(guessWord[item]);}
           console.log(`\u001b[5A\u001b[0J                                                                                                               ${brightGreen}Congratulations${brightWhite}! You've found the ${brightMagenta}keyboard${brightWhite}!`)
           playerGuesses();
       } else if (pickANumber > highNum) {
-        console.log(`\u001b[5A\u001b[0J                                                                                                                     Let's keep it ${cyan}under ${brightYellow}${highNum}${brightWhite}, okay?`) // Broken, fix
+        console.log(`\u001b[5A\u001b[0J                                                                                                                     Let's keep it ${cyan}under ${brightYellow}${highNum}${brightWhite}, okay?`)
         
-        console.log("minNum: ", minNum, typeof minNum, "highNum: ", highNum, typeof highNum, "pickANumber", pickANumber, typeof pickANumber)
+        // console.log("minNum: ", minNum, typeof minNum, "highNum: ", highNum, typeof highNum, "pickANumber", pickANumber, typeof pickANumber)
 
         // playerGuesses();
       } else if (pickANumber < minNum) {
@@ -210,32 +221,58 @@ console.log(guessWord[item]);}
         console.log("You've made it to the end")
       }
   }
+
+
+
+
+  
+  let randNum = Math.random()
+
   async function computerGuesses() {
-  // Random Number Generator:
       let randNum = Math.floor((Math.random()*(highNum - minNum) + minNum)); // This is MOSTLY good. Sometimes it gets on a tangent. Love to see a better solution :)
-      numbersPlayed.push(randNum); // double check this later. probably need to move and improve
+      // numbersPlayed.push(randNum); // double check this later. probably need to move and improve
       // console.log(`Numbers Played: `, numbersPlayed)
-      
       let answerHighOrLow = await ask(`\n${brightWhite}                                                                                                       Is your number ${brightYellow}(h)igher${brightWhite}, ${brightYellow}(l)ower${brightWhite}, or the ${brightYellow}(s)ame ${brightWhite}as ${brightYellow}${randNum}?                                                                                                                                                                                                                                                      `);
       if
       // If the answer is Lower
       (answerHighOrLow == "l" || answerHighOrLow == "lower") {
         console.log(`\u001b[4A\u001b[2K${brightWhite}`)
+      highNum = randNum -1;
 
-      // If the highNum minus 1 is not greater than one, it's going too low 
-        if (randNum -1 >= 1) {
-          highNum = randNum -1;
+        if (highNum < secretNum) {
+          let youSure = await ask (`                                                                                                                         You sure about that?                                                                                                                                                                                                                                                              ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}?                                                                                                                                                                                                                                                                        `);
+    
+          if (youSure == "y" || youSure == "yes") {
+          let reallySure = await ask(`                                                                                                                       Are you ${brightRed}SURE${brightWhite} you're ${brightYellow}sure${brightWhite}?                                                                                                                                                                                                                                                           ${brightYellow}(y)es${brightWhite}, or ${brightYellow}(n)o${brightWhite}?                                                                                                                    `);
+          if (reallySure == "y" || reallySure == "yes") {
+          process.exit()
+          } else if (reallySure == "n" || reallySure == "no") {
+          computerGuesses()
+          } else {reallySure()}
+          } else if (youSure == "n" || youSure == "no") {
           computerGuesses();
-          if (highNum == minNum) {
+        } else {
+        youSure();
+        
+        
+    // } else {
+    //   computerGuesses();
+      }
+
+      // console.log("randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
+    }
+      else if (highNum -1 >= 1) { // If the highNum minus 1 is not greater than one, it's going too low 
+        // if (randNum -1 <= 1) {
+          computerGuesses();
+           if (highNum == minNum) {
             console.log(`\n\n\u001b[5A\u001b[0J                                                                                                                          ${brightWhite}Your number is: ${brightYellow}${minNum}${brightWhite}!`) // Add styling
             playAgain()
-          }
-        } else {console.log(`${brightWhite}                                                                                                                             ${brightWhite}Too ${brightWhite} ${brightYellow}low${brightWhite}, dude. \n[1m                                                                                                                  ${brightWhite}Did you ${brightWhite} ${brightYellow}forget ${brightWhite}your ${brightWhite} ${brightYellow}number???${brightWhite}\u001b[2K`);playAgain();} // Check the text codes after "number???"
-        // console.log(highNum, minNum)
-        
-
+          } else if (highNum < 1) {console.log(`${brightWhite}                                                                                                                             ${brightWhite}Too ${brightWhite} ${brightYellow}low${brightWhite}, dude. \n[1m                                                                                                                  ${brightWhite}Did you ${brightWhite} ${brightYellow}forget ${brightWhite}your ${brightWhite} ${brightYellow}number???${brightWhite}\u001b[2K`);playAgain();} // Check the text codes after "number???"
+        }
       // If the answer is Higher
       } else if (answerHighOrLow == "h" || answerHighOrLow == "higher") {
+        console.log("Hiiiiiiigh","randNum: ", randNum, "highNum: ", highNum, "minNum: ", minNum);
+
         console.log(`\u001b[4A\u001b[2K${brightWhite}`)
 
         // If the minimum Number is the same as the highest number
@@ -251,13 +288,15 @@ console.log(guessWord[item]);}
 
       // If the answer is Same
       } else if (answerHighOrLow == "s" || answerHighOrLow == "same") {
-        console.log(`\u001b[2A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}${brightWhite}!!!`);
+        console.log(`\u001b[6A\u001b[2K${brightWhite}                                                                                                                     Woo hoo! ${brightWhite}Your number was ${brightYellow}${randNum}${brightWhite}!!!`);
         playAgain();
 
       // If the answer doesn't fit any acceptable answers
-      } else {console.log(`                                                                                                                       \u001b[4A\u001b[2K${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)} // move this up two rows and clear whole row
+      } else {console.log(`                                                                                                                       \u001b[4A\u001b[0J${brightWhite}${brightYellow}(h)igher${brightWhite}, or ${brightYellow}(l)ower${brightWhite}, please...`)}
       computerGuesses();
   }
+  
+
   computerGuesses();
 
   async function playAgain() {
