@@ -199,11 +199,11 @@ console.log(guessWord[item]);}
           console.log(`\u001b[5A\u001b[0J                                                                                                               ${brightGreen}Congratulations${brightWhite}! You've found the ${brightMagenta}keyboard${brightWhite}!`)
           playerGuesses();
       } else if (pickANumber > highNum) {
-        console.log(`\u001b[5A\u001b[0J                                                                                                                     Let's keep it ${cyan}under ${brightYellow}${highNum}${brightWhite}, okay?`)
+        console.log(`\u001b[3A\u001b[0J                                                                                                                     Let's keep it ${cyan}under ${brightYellow}${highNum}${brightWhite}, okay?\n                                                                                                                                                                                                                                                                                                 `)
         
         // console.log("minNum: ", minNum, typeof minNum, "highNum: ", highNum, typeof highNum, "pickANumber", pickANumber, typeof pickANumber)
-
-        // playerGuesses();
+        console.log(`\u001b[3A\u001b[0J`); // Not perfect, but seems okay. Look into these later.
+        playerGuesses();
       } else if (pickANumber < minNum) {
         console.log(`                                                                                                                           You've gone ${red}too low${brightWhite}! \n                                                                                                                    You have to keep your guess above ${brightYellow}${minNum}${brightWhite}.`)
         playerGuesses();
